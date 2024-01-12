@@ -1,0 +1,245 @@
+﻿<Window x:Class="ParametersMonitor.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:self="clr-namespace:ParametersMonitor"
+        xmlns:System="clr-namespace:System;assembly=System.Runtime"
+        mc:Ignorable="d"
+        Title="Parameters Monitor" Height="370" Width="320"
+        Icon="C:\Users\turowski\source\repos\ParametersMonitor\ikona.ico">
+    <Window.Resources>
+        <System:Double x:Key="boxTitleFontSize">12.0</System:Double>
+        <System:Double x:Key="boxValueFontSize">20.0</System:Double>
+        <System:Double x:Key="boxUnitsFontSize">12.0</System:Double>
+    </Window.Resources>
+    <!--<Window.CommandBindings>
+        <CommandBinding Command="self:CustomCommands.ConnectCOM" CanExecute="ConnectCOMPortsCommand_CanExecute" Executed="ConnectCOMPortsCommand_Executed"/>
+    </Window.CommandBindings>-->
+    <DockPanel>
+        <Menu DockPanel.Dock="Top">
+            <MenuItem Header="Menu">
+                <MenuItem Header="Set alarm setpoint" />
+                <MenuItem Header="_Disable cryopump alarm" />
+            </MenuItem>
+            <MenuItem Header="Turbo setup">
+                <MenuItem.Resources>
+                    <RadioButton x:Key="RadioButtonResource" x:Shared="False" HorizontalAlignment="Center" GroupName="{Binding GrpNm}" IsChecked="{Binding State}" IsHitTestVisible="False"/>
+                </MenuItem.Resources>
+                <MenuItem Header="{Binding XXPump.Header}" ItemsSource="{Binding XXMenuItems}" Visibility="{Binding XXPump.PumpEnabled}">
+                    <MenuItem.CommandBindings>
+                        <CommandBinding Command="self:CustomCommands.ConnectCOM" CanExecute="ConnectCOMPortsCommand_CanExecute" Executed="ConnectCOMPortsCommand_Executed"/>
+                    </MenuItem.CommandBindings>
+                    <MenuItem.ItemContainerStyle>
+                        <Style TargetType="{x:Type MenuItem}">
+                            <Setter Property="StaysOpenOnClick" Value="True" />
+                            <Setter Property="Icon" Value="{DynamicResource RadioButtonResource}"/>
+                            <Setter Property="Command" Value="self:CustomCommands.ConnectCOM" />
+                            <Setter Property="Header" Value="{Binding Header}" />
+                        </Style>
+                    </MenuItem.ItemContainerStyle>
+
+                </MenuItem>
+                <MenuItem Header="YY Pump: None" Name="YYPump" ItemsSource="{Binding YYMenuItems}">
+                    <MenuItem.CommandBindings>
+                        <CommandBinding Command="self:CustomCommands.ConnectCOM" CanExecute="ConnectCOMPortsCommand_CanExecute" Executed="ConnectCOMPortsCommand_Executed"/>
+                    </MenuItem.CommandBindings>
+                    <MenuItem.ItemContainerStyle>
+                        <Style TargetType="{x:Type MenuItem}">
+                            <Setter Property="StaysOpenOnClick" Value="True" />
+                            <Setter Property="Icon" Value="{DynamicResource RadioButtonResource}"/>
+                            <Setter Property="Command" Value="self:CustomCommands.ConnectCOM" />
+                            <Setter Property="Header" Value="{Binding Header}" />
+                        </Style>
+                    </MenuItem.ItemContainerStyle>
+                </MenuItem>
+                <Separator />
+                <MenuItem Header="Disable XX Pump" Command="self:CustomCommands.EnablePump">
+                    <MenuItem.CommandBindings>
+                        <CommandBinding Command="self:CustomCommands.EnablePump" CanExecute="EnablePump_CanExecute" Executed="EnablePump_Executed"/>
+                    </MenuItem.CommandBindings>
+                </MenuItem>
+                <MenuItem Header="Disable YY Pump" />
+            </MenuItem>
+            <MenuItem Header="Cryo setup">
+                <MenuItem.Resources>
+                    <RadioButton x:Key="RadioButtonResource" x:Shared="False" HorizontalAlignment="Center" GroupName="{Binding GrpNm}" IsChecked="{Binding State}" IsHitTestVisible="False"/>
+                </MenuItem.Resources>
+                <MenuItem Header="C1 Pump: None" Name="C1Pump" ItemsSource="{Binding Cryo1MenuItems}" >
+                    <MenuItem.CommandBindings>
+                        <CommandBinding Command="self:CustomCommands.ConnectCOM" CanExecute="ConnectCOMPortsCommand_CanExecute" Executed="ConnectCOMPortsCommand_Executed"/>
+                    </MenuItem.CommandBindings>
+                    <MenuItem.ItemContainerStyle>
+                        <Style TargetType="{x:Type MenuItem}">
+                            <Setter Property="StaysOpenOnClick" Value="True" />
+                            <Setter Property="Icon" Value="{DynamicResource RadioButtonResource}"/>
+                            <Setter Property="Command" Value="self:CustomCommands.ConnectCOM" />
+                            <Setter Property="Header" Value="{Binding Header}" />
+                        </Style>
+                    </MenuItem.ItemContainerStyle>
+                </MenuItem>
+                <MenuItem Header="C2 Pump: None" Name="C2Pump" ItemsSource="{Binding Cryo2MenuItems}" >
+                    <MenuItem.CommandBindings>
+                        <CommandBinding Command="self:CustomCommands.ConnectCOM" CanExecute="ConnectCOMPortsCommand_CanExecute" Executed="ConnectCOMPortsCommand_Executed"/>
+                    </MenuItem.CommandBindings>
+                    <MenuItem.ItemContainerStyle>
+                        <Style TargetType="{x:Type MenuItem}">
+                            <Setter Property="StaysOpenOnClick" Value="True" />
+                            <Setter Property="Icon" Value="{DynamicResource RadioButtonResource}"/>
+                            <Setter Property="Command" Value="self:CustomCommands.ConnectCOM" />
+                            <Setter Property="Header" Value="{Binding Header}" />
+                        </Style>
+                    </MenuItem.ItemContainerStyle>
+                </MenuItem>
+                <Separator />
+            </MenuItem>
+        </Menu>
+        <Grid Margin="0,0,0,5">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*" />
+                <ColumnDefinition Width="1*" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="1*" />
+                <RowDefinition Height="1*" />
+                <RowDefinition Height="1*" />
+                <RowDefinition Height="1*" />
+                <RowDefinition Height="1*" />
+            </Grid.RowDefinitions>
+            <GroupBox Grid.Row="0" Grid.Column="0" Margin="5,0,5,0">
+                <GroupBox.Header>
+                    <StackPanel Orientation="Horizontal" Margin="0,-5,0,-5">
+                        <Label Content="Water flow" FontSize="{Binding Source={StaticResource boxTitleFontSize}}" FontWeight="Bold" />
+                    </StackPanel>
+                </GroupBox.Header>
+                <StackPanel Margin="2,0,2,5" Orientation="Horizontal">
+                    <Label Content="None" FontSize="{Binding Source={StaticResource boxValueFontSize}}" Margin="20,0,0,0" VerticalAlignment="Center" />
+                    <Label Content="l/min" FontSize="{Binding Source={StaticResource boxUnitsFontSize}}" Margin="20,0,2,0" HorizontalAlignment="Center" VerticalAlignment="Bottom"/>
+                </StackPanel>
+            </GroupBox>
+            <GroupBox Grid.Row="0" Grid.Column="1" Margin="5,0,5,0">
+                <GroupBox.Header>
+                    <StackPanel Orientation="Horizontal" Margin="0,-5,0,-5">
+                        <Label Content="Alarm setpoint" FontSize="{Binding Source={StaticResource boxTitleFontSize}}" FontWeight="Bold"/>
+                    </StackPanel>
+                </GroupBox.Header>
+                <StackPanel Margin="2,0,2,5" Orientation="Horizontal">
+                    <Label Content="None" FontSize="{Binding Source={StaticResource boxValueFontSize}}" Margin="20,0,0,0" VerticalAlignment="Center"/>
+                    <Label Content="l/min" FontSize="{Binding Source={StaticResource boxUnitsFontSize}}" Margin="20,0,2,0" HorizontalAlignment="Center" VerticalAlignment="Bottom"/>
+                </StackPanel>
+            </GroupBox>
+            <GroupBox Grid.Row="1" Grid.Column="0" Margin="5,0,5,0">
+                <GroupBox.Header>
+                    <StackPanel Orientation="Horizontal" Margin="0,-5,0,-5">
+                        <Label Content="Temperature In" FontSize="{Binding Source={StaticResource boxTitleFontSize}}" FontWeight="Bold"/>
+                    </StackPanel>
+                </GroupBox.Header>
+                <StackPanel Margin="2,0,2,5" Orientation="Horizontal">
+                    <Label Content="None" FontSize="{Binding Source={StaticResource boxValueFontSize}}" Margin="20,0,0,0" VerticalAlignment="Center"/>
+                    <Label Content="°C" FontSize="{Binding Source={StaticResource boxUnitsFontSize}}" Margin="20,0,2,0" HorizontalAlignment="Center" VerticalAlignment="Bottom"/>
+                </StackPanel>
+            </GroupBox>
+            <GroupBox Grid.Row="1" Grid.Column="1" Margin="5,0,5,0">
+                <GroupBox.Header>
+                    <StackPanel Orientation="Horizontal" Margin="0,-5,0,-5">
+                        <Label Content="Temperature Out" FontSize="{Binding Source={StaticResource boxTitleFontSize}}" FontWeight="Bold"/>
+                    </StackPanel>
+                </GroupBox.Header>
+                <StackPanel Margin="2,0,2,5" Orientation="Horizontal">
+                    <Label Content="None" FontSize="{Binding Source={StaticResource boxValueFontSize}}" Margin="20,0,0,0" VerticalAlignment="Center"/>
+                    <Label Content="°C" FontSize="{Binding Source={StaticResource boxUnitsFontSize}}" Margin="20,0,2,0" HorizontalAlignment="Center" VerticalAlignment="Bottom"/>
+                </StackPanel>
+            </GroupBox>
+            <GroupBox Grid.Row="{Binding XXPump.PumpRow}" Grid.Column="0" Margin="5,0,5,0" Visibility="{Binding XXPump.PumpEnabled}" >
+                <GroupBox.Header>
+                    <StackPanel Orientation="Horizontal" Margin="0,-5,0,-5">
+                        <TextBox Text="{Binding XXPump.PumpName}" FontSize="{Binding Source={StaticResource boxTitleFontSize}}" FontWeight="Bold"
+                                 BorderThickness="0" Margin="0,5,0,5" MouseDoubleClick="EditName_MouseDoubleClick"
+                                 KeyDown="EditName_KeyDown" MouseUp="EditName_MouseUp" />
+                    </StackPanel>
+                </GroupBox.Header>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="0.5*" />
+                        <ColumnDefinition Width="0.15*" />
+                        <ColumnDefinition Width="0.2*" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="0.5*" />
+                        <RowDefinition Height="0.5*" />
+                    </Grid.RowDefinitions>
+                    <Label Content="None" Grid.Row="0" Grid.Column="0" Grid.RowSpan="2" FontSize="{Binding Source={StaticResource boxValueFontSize}}" Margin="20,0,0,0" VerticalAlignment="Center"/>
+                    <Label Content="VA" Grid.Row="0" Grid.Column="2" FontSize="10" Margin="0,-5,0,0" HorizontalAlignment="Right"/>
+                    <Label Content="XX" Grid.Row="0" Grid.Column="1" FontSize="10" Margin="0,-5,-15,0" HorizontalAlignment="Right"/>
+                    <Label Content="RPS" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" FontSize="{Binding Source={StaticResource boxUnitsFontSize}}" Margin="15,-10,0,0" HorizontalAlignment="Center" VerticalAlignment="Center" Width="50"/>
+                </Grid>
+            </GroupBox>
+            <GroupBox Grid.Row="2" Grid.Column="1" Margin="5,0,5,0" >
+                <GroupBox.Header>
+                    <StackPanel Orientation="Horizontal" Margin="0,-5,0,-5">
+                        <Label Content="YY Pump" FontSize="{Binding Source={StaticResource boxTitleFontSize}}" FontWeight="Bold"/>
+                    </StackPanel>
+                </GroupBox.Header>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="0.5*" />
+                        <ColumnDefinition Width="0.15*" />
+                        <ColumnDefinition Width="0.2*" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="0.5*" />
+                        <RowDefinition Height="0.5*" />
+                    </Grid.RowDefinitions>
+                    <Label Content="None" Grid.Row="0" Grid.Column="0" Grid.RowSpan="2" FontSize="{Binding Source={StaticResource boxValueFontSize}}" Margin="20,0,0,0" VerticalAlignment="Center"/>
+                    <Label Content="VA" Grid.Row="0" Grid.Column="2" FontSize="10" Margin="0,-5,0,0" HorizontalAlignment="Right"/>
+                    <Label Content="XX" Grid.Row="0" Grid.Column="1" FontSize="10" Margin="0,-5,-15,0" HorizontalAlignment="Right"/>
+                    <Label Content="RPS" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" FontSize="{Binding Source={StaticResource boxUnitsFontSize}}" Margin="15,-10,0,0" HorizontalAlignment="Center" VerticalAlignment="Center" Width="50"/>
+                </Grid>
+            </GroupBox>
+            <GroupBox Grid.Row="3" Grid.Column="0" Margin="5,0,5,0">
+                <GroupBox.Header>
+                    <StackPanel Orientation="Horizontal" Margin="0,-5,0,-5">
+                        <Label Content="Side" FontSize="{Binding Source={StaticResource boxTitleFontSize}}" FontWeight="Bold"/>
+                    </StackPanel>
+                </GroupBox.Header>
+                <StackPanel Margin="2,0,2,5" Orientation="Horizontal">
+                    <Label Content="None" FontSize="{Binding Source={StaticResource boxValueFontSize}}" Margin="20,0,0,0" VerticalAlignment="Center"/>
+                    <Label Content="K" FontSize="{Binding Source={StaticResource boxUnitsFontSize}}" Margin="20,0,2,0" HorizontalAlignment="Center" VerticalAlignment="Bottom"/>
+                </StackPanel>
+            </GroupBox>
+            <GroupBox Grid.Row="3" Grid.Column="1" Margin="5,0,5,0">
+                <GroupBox.Header>
+                    <StackPanel Orientation="Horizontal" Margin="0,-5,0,-5">
+                        <Label Content="LL" FontSize="{Binding Source={StaticResource boxTitleFontSize}}" FontWeight="Bold"/>
+                    </StackPanel>
+                </GroupBox.Header>
+                <StackPanel Margin="2,0,2,5" Orientation="Horizontal">
+                    <Label Content="None" FontSize="{Binding Source={StaticResource boxValueFontSize}}" Margin="20,0,0,0" VerticalAlignment="Center"/>
+                    <Label Content="K" FontSize="{Binding Source={StaticResource boxUnitsFontSize}}" Margin="20,0,2,0" HorizontalAlignment="Center" VerticalAlignment="Bottom"/>
+                </StackPanel>
+            </GroupBox>
+            <GroupBox Grid.Row="4" Grid.Column="1" Margin="5,0,5,0">
+                <GroupBox.Header>
+                    <StackPanel Orientation="Horizontal" Margin="0,-5,0,-5">
+                        <Label Content="Top" FontSize="{Binding Source={StaticResource boxTitleFontSize}}" FontWeight="Bold"/>
+                    </StackPanel>
+                </GroupBox.Header>
+                <StackPanel Margin="2,0,2,5" Orientation="Horizontal">
+                    <Label Content="None" FontSize="{Binding Source={StaticResource boxValueFontSize}}" Margin="20,0,0,0" VerticalAlignment="Center"/>
+                    <Label Content="K" FontSize="{Binding Source={StaticResource boxUnitsFontSize}}" Margin="20,0,2,0" HorizontalAlignment="Center" VerticalAlignment="Bottom"/>
+                </StackPanel>
+            </GroupBox>
+            <GroupBox Grid.Row="4" Grid.Column="0" Margin="5,0,5,0">
+                <GroupBox.Header>
+                    <StackPanel Orientation="Horizontal" Margin="0,-5,0,-5">
+                        <Label Content="Buffer" FontSize="{Binding Source={StaticResource boxTitleFontSize}}" FontWeight="Bold"/>
+                    </StackPanel>
+                </GroupBox.Header>
+                <StackPanel Margin="2,0,2,5" Orientation="Horizontal">
+                    <Label Content="None" FontSize="{Binding Source={StaticResource boxValueFontSize}}" Margin="20,0,0,0" VerticalAlignment="Center"/>
+                    <Label Content="K" FontSize="{Binding Source={StaticResource boxUnitsFontSize}}" Margin="20,0,2,0" HorizontalAlignment="Center" VerticalAlignment="Bottom"/>
+                </StackPanel>
+            </GroupBox>
+        </Grid>
+    </DockPanel>
+</Window>
